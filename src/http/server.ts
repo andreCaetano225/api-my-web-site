@@ -2,7 +2,7 @@ import fastify from "fastify";
 import { profileRoutes } from "../routes/profileroutes";
 
 
-const app = fastify({ logger: true });
+const app = fastify();
 
 app.register(profileRoutes, {
     prefix: "/api",

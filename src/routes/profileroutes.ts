@@ -2,11 +2,7 @@ import { FastifyInstance } from "fastify";
 import { prismaClient } from "../prisma";
 import {z} from "zod"; 
 
-
-
-export const profileRoutes = async (app: FastifyInstance) => {
-
-    const profileSchma = z.object({
+  const profileSchma = z.object({
         id: z.number(),
         name: z.string(),
         about: z.string(),
@@ -17,6 +13,8 @@ export const profileRoutes = async (app: FastifyInstance) => {
         language: z.string(),
         socialWpp: z.string()
     })
+
+export const profileRoutes = async (app: FastifyInstance) => {
 
 
     app.post("/", async (request, reply) => {
@@ -57,16 +55,19 @@ export const profileRoutes = async (app: FastifyInstance) => {
     })
 
 
-    app.put("/", async (request, reply) => {
+    app.patch("/:ids", async (request, reply) => {
 
+        const idParms = z.object({
+            ids: z.string()
+        })
 
-        const { id } = profileSchma.parse(request.params)
+        const { ids } = idParms.parse(request.params)
 
-        if(id !== 1) {
+        if(ids !== '1') {
             return reply.status(400).send('O id deve ser 1')
         }
 
-        const { name, about, eye, email, phone, local, language, socialWpp } = profileSchma.parse(request.body)
+        const { id, name, about, eye, email, phone, local, language, socialWpp } = profileSchma.parse(request.body)
 
         const profile = await prismaClient.mySite.update({
             where: {
